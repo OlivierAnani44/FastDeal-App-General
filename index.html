@@ -6,11 +6,9 @@
     <base href="/FastDealApp_Pwa/">
     <title>FastDeal</title>
     <link rel="manifest" href="manifest.json">
-    <!-- Police moderne et icônes Material -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <style>
-        /* ========== VARIABLES CSS (thème sombre) ========== */
         :root {
             --primary: #ff8c00;
             --primary-light: #ffb347;
@@ -28,426 +26,102 @@
             --text-muted: #808080;
             --border-color: #444;
         }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Inter', 'Segoe UI', Roboto, system-ui, sans-serif;
-        }
-
-        html, body {
-            height: 100%;
-            overflow: hidden;
-        }
-
-        body {
-            background-color: var(--bg-dark);
-            color: var(--text-primary);
-            display: flex;
-            flex-direction: column;
-        }
-
-        /* En-tête avec titre et taux */
-        .app-bar {
-            background-color: var(--bg-light);
-            padding: 0.75rem 1rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.5);
-            flex-shrink: 0;
-            border-bottom: 1px solid var(--border-color);
-        }
-        .app-title {
-            font-size: 1.3rem;
-            font-weight: 700;
-            color: var(--primary);
-            white-space: nowrap;
-        }
-        .rate-info {
-            font-size: 0.7rem;
-            color: var(--text-muted);
-            text-align: right;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            min-width: 70px;
-        }
-
-        /* Barre de sélecteur de date (juste en dessous) */
-        .date-bar {
-            background-color: var(--bg-light);
-            padding: 0.5rem 1rem;
-            display: flex;
-            justify-content: center;
-            border-bottom: 1px solid var(--border-color);
-            flex-shrink: 0;
-        }
-        .date-selector {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        .date-selector input[type="date"] {
-            font-size: 0.9rem;
-            padding: 0.5rem;
-            border-radius: 8px;
-            background: var(--bg-dark);
-            color: white;
-            border: 1px solid var(--border-color);
-            width: auto;
-            max-width: 140px;
-        }
-        .date-selector button {
-            padding: 0.5rem 0.75rem;
-            font-size: 0.75rem;
-            background-color: var(--secondary);
-            white-space: nowrap;
-        }
-
-        /* Conteneur principal des écrans (avec safe area) */
-        .screen-container {
-            flex: 1;
+        * { margin:0; padding:0; box-sizing:border-box; font-family:'Inter','Segoe UI',Roboto,sans-serif; }
+        html,body { height:100%; overflow:hidden; }
+        body { background:var(--bg-dark); color:var(--text-primary); display:flex; flex-direction:column; }
+        .app-bar { background:var(--bg-light); padding:0.75rem 1rem; display:flex; align-items:center; justify-content:space-between; box-shadow:0 2px 8px rgba(0,0,0,0.5); flex-shrink:0; border-bottom:1px solid var(--border-color); }
+        .app-title { font-size:1.3rem; font-weight:700; color:var(--primary); white-space:nowrap; }
+        .rate-info { font-size:0.7rem; color:var(--text-muted); text-align:right; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; min-width:70px; }
+        .date-bar { background:var(--bg-light); padding:0.5rem 1rem; display:flex; justify-content:center; border-bottom:1px solid var(--border-color); flex-shrink:0; }
+        .date-selector { display:flex; align-items:center; gap:0.5rem; }
+        .date-selector input[type="date"] { font-size:0.9rem; padding:0.5rem; border-radius:8px; background:var(--bg-dark); color:white; border:1px solid var(--border-color); width:auto; max-width:140px; }
+        .date-selector button { padding:0.5rem 0.75rem; font-size:0.75rem; background-color:var(--secondary); white-space:nowrap; }
+        .screen-container { flex:1; overflow-y:auto; padding:1rem; padding-bottom:calc(1rem + env(safe-area-inset-bottom)); display:flex; flex-direction:column; }
+        .screen { display:none; flex-direction:column; gap:1rem; }
+        .screen.active { display:flex; }
+        .screen-title { font-size:1.2rem; font-weight:700; color:var(--secondary); margin-bottom:0.5rem; padding-bottom:0.5rem; border-bottom:3px solid var(--secondary); letter-spacing:-0.5px; text-shadow:0 2px 4px rgba(0,0,0,0.3); display:flex; align-items:center; gap:0.5rem; }
+        .screen-title .material-icons { font-size:1.5rem; color:var(--secondary-light); }
+        .card { background:var(--card-bg); border-radius:1rem; padding:1rem; box-shadow:0 4px 6px rgba(0,0,0,0.3); transition:transform 0.2s, box-shadow 0.2s; }
+        .card:hover { transform:translateY(-2px); box-shadow:0 6px 12px rgba(0,0,0,0.4); }
+        .grid-2 { display:flex; flex-direction:column; gap:0.5rem; }
+        .grid-2 > div { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; }
+        .grid-2 span:first-child { font-weight:500; color:var(--text-secondary); }
+        .grid-2 span:last-child { font-weight:600; text-align:right; }
+        input, select { background:var(--bg-light); border:1px solid var(--border-color); color:var(--text-primary); padding:0.75rem; border-radius:0.5rem; font-size:1rem; width:100%; transition:border 0.2s, box-shadow 0.2s; }
+        input:focus { outline:2px solid var(--primary); border-color:transparent; }
+        button { background:var(--primary); border:none; color:white; padding:0.75rem 1rem; border-radius:2rem; font-weight:600; font-size:1rem; cursor:pointer; transition:opacity 0.2s, transform 0.1s; border:1px solid transparent; display:inline-flex; align-items:center; justify-content:center; gap:0.5rem; }
+        button:active { opacity:0.7; transform:scale(0.98); }
+        button.secondary { background:var(--secondary); }
+        button.danger { background:var(--danger); }
+        button:disabled { opacity:0.4; pointer-events:none; }
+        button .material-icons { font-size:1.2rem; }
+        .bottom-nav { background:var(--bg-light); display:flex; justify-content:space-around; padding:0.25rem 0; padding-bottom:max(0.25rem, env(safe-area-inset-bottom)); flex-shrink:0; border-top:1px solid var(--border-color); flex-wrap:wrap; }
+        .nav-item { flex:1 1 auto; display:flex; flex-direction:column; align-items:center; padding:0.5rem 0.25rem; color:var(--text-muted); font-size:0.65rem; cursor:pointer; transition:color 0.2s; min-width:50px; }
+        .nav-item.active { color:var(--primary); }
+        .nav-item .material-icons { font-size:1.3rem; margin-bottom:0.2rem; }
+        .message { padding:0.5rem; border-radius:0.5rem; text-align:center; font-weight:600; animation:fadeIn 0.3s; }
+        @keyframes fadeIn { from{opacity:0; transform:translateY(-10px);} to{opacity:1; transform:translateY(0);} }
+        .message.success { background:#1e4a1e; color:#adffad; }
+        .message.error { background:#4a1e1e; color:#ffadad; }
+        .message.warning { background:#4a4a1e; color:#ffffad; }
+        .message.info { background:#1e4a4a; color:#adffff; }
+        .message.offline { background:#4a4a1e; color:#ffffad; }
+        .scrollable { overflow-y:auto; max-height:100%; padding-right:0.25rem; }
+        .history-card, .lot-card { background:var(--bg-light); border-radius:0.75rem; padding:0.75rem; margin-bottom:0.75rem; transition:background 0.2s; }
+        .history-card:hover { background:var(--bg-dark); }
+        .card-header { display:flex; justify-content:space-between; font-weight:600; flex-wrap:wrap; gap:0.5rem; }
+        .card-detail { display:flex; justify-content:space-between; color:var(--text-secondary); font-size:0.9rem; flex-wrap:wrap; gap:0.5rem; }
+        .card-actions { display:flex; gap:0.5rem; margin-top:0.5rem; }
+        .card-actions button { flex:1; padding:0.5rem; font-size:0.8rem; white-space:nowrap; }
+        .flex-row { display:flex; gap:0.5rem; align-items:center; flex-wrap:wrap; }
+        .mt-2 { margin-top:0.5rem; }
+        .mb-2 { margin-bottom:0.5rem; }
+        .text-success { color:var(--success); }
+        .text-warning { color:var(--warning); }
+        .text-danger { color:var(--danger); }
+        .text-info { color:var(--info); }
+        .bold { font-weight:600; }
+        .small { font-size:0.8rem; }
+        .full-width { width:100%; }
+        input[type="checkbox"] { width:auto; min-width:1.5rem; height:1.5rem; margin-right:0.5rem; accent-color:var(--primary); }
+        .button-group { display:flex; flex-direction:column; gap:0.75rem; }
+        .sessions-list {
+            max-height: 250px;
             overflow-y: auto;
-            padding: 1rem;
-            padding-bottom: calc(1rem + env(safe-area-inset-bottom));
+            padding-right: 5px;
             display: flex;
             flex-direction: column;
-        }
-
-        /* Chaque écran est masqué par défaut */
-        .screen {
-            display: none;
-            flex-direction: column;
-            gap: 1rem;
-        }
-        .screen.active {
-            display: flex;
-        }
-
-        /* Titre d'écran moderne - responsive */
-        .screen-title {
-            font-size: 1.2rem;
-            font-weight: 700;
-            color: var(--secondary);
-            margin-bottom: 0.5rem;
-            padding-bottom: 0.5rem;
-            border-bottom: 3px solid var(--secondary);
-            letter-spacing: -0.5px;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        .screen-title .material-icons {
-            font-size: 1.5rem;
-            color: var(--secondary-light);
-        }
-
-        /* Cartes */
-        .card {
-            background-color: var(--card-bg);
-            border-radius: 1rem;
-            padding: 1rem;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-        .card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(0,0,0,0.4);
-        }
-
-        /* Grilles - adaptées pour mobile */
-        .grid-2 {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-        }
-        .grid-2 > div {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-
-        .grid-2 span:first-child {
-            font-weight: 500;
-            color: var(--text-secondary);
-        }
-        .grid-2 span:last-child {
-            font-weight: 600;
-            text-align: right;
-        }
-
-        /* Champs de texte */
-        input, select {
-            background-color: var(--bg-light);
-            border: 1px solid var(--border-color);
-            color: var(--text-primary);
-            padding: 0.75rem;
-            border-radius: 0.5rem;
-            font-size: 1rem;
-            width: 100%;
-            transition: border 0.2s, box-shadow 0.2s;
-        }
-        input:focus {
-            outline: 2px solid var(--primary);
-            border-color: transparent;
-        }
-
-        /* Boutons */
-        button {
-            background-color: var(--primary);
-            border: none;
-            color: white;
-            padding: 0.75rem 1rem;
-            border-radius: 2rem;
-            font-weight: 600;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: opacity 0.2s, transform 0.1s;
-            border: 1px solid transparent;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-        }
-        button:active { opacity: 0.7; transform: scale(0.98); }
-        button.secondary { background-color: var(--secondary); }
-        button.danger { background-color: var(--danger); }
-        button:disabled {
-            opacity: 0.4;
-            pointer-events: none;
-            cursor: default;
-        }
-        button .material-icons {
-            font-size: 1.2rem;
-        }
-
-        /* Barre de navigation basse (avec safe area) - responsive */
-        .bottom-nav {
-            background-color: var(--bg-light);
-            display: flex;
-            justify-content: space-around;
-            padding: 0.25rem 0;
-            padding-bottom: max(0.25rem, env(safe-area-inset-bottom));
-            flex-shrink: 0;
-            border-top: 1px solid var(--border-color);
-            flex-wrap: wrap;
-        }
-        .nav-item {
-            flex: 1 1 auto;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 0.5rem 0.25rem;
-            color: var(--text-muted);
-            font-size: 0.65rem;
-            cursor: pointer;
-            transition: color 0.2s;
-            min-width: 50px;
-        }
-        .nav-item.active {
-            color: var(--primary);
-        }
-        .nav-item .material-icons {
-            font-size: 1.3rem;
-            margin-bottom: 0.2rem;
-        }
-
-        /* Messages */
-        .message {
-            padding: 0.5rem;
-            border-radius: 0.5rem;
-            text-align: center;
-            font-weight: 600;
-            animation: fadeIn 0.3s;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .message.success { background-color: #1e4a1e; color: #adffad; }
-        .message.error { background-color: #4a1e1e; color: #ffadad; }
-        .message.warning { background-color: #4a4a1e; color: #ffffad; }
-        .message.info { background-color: #1e4a4a; color: #adffff; }
-        .message.offline { background-color: #4a4a1e; color: #ffffad; }
-
-        /* Liste défilante */
-        .scrollable {
-            overflow-y: auto;
-            max-height: 100%;
-            padding-right: 0.25rem;
-        }
-
-        /* Carte d'historique / lot */
-        .history-card, .lot-card {
-            background-color: var(--bg-light);
-            border-radius: 0.75rem;
-            padding: 0.75rem;
-            margin-bottom: 0.75rem;
-            transition: background-color 0.2s;
-        }
-        .history-card:hover {
-            background-color: var(--bg-dark);
-        }
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            font-weight: 600;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-        }
-        .card-detail {
-            display: flex;
-            justify-content: space-between;
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-        }
-        .card-actions {
-            display: flex;
             gap: 0.5rem;
             margin-top: 0.5rem;
         }
-        .card-actions button {
-            flex: 1;
-            padding: 0.5rem;
-            font-size: 0.8rem;
-            white-space: nowrap;
-        }
-
-        /* Utilitaires */
-        .flex-row {
-            display: flex;
-            gap: 0.5rem;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-        .mt-2 { margin-top: 0.5rem; }
-        .mb-2 { margin-bottom: 0.5rem; }
-        .text-success { color: var(--success); }
-        .text-warning { color: var(--warning); }
-        .text-danger { color: var(--danger); }
-        .text-info { color: var(--info); }
-        .bold { font-weight: 600; }
-        .small { font-size: 0.8rem; }
-        .full-width { width: 100%; }
-
-        /* Checkbox avec largeur minimale */
-        input[type="checkbox"] {
-            width: auto;
-            min-width: 1.5rem;
-            height: 1.5rem;
-            margin-right: 0.5rem;
-            accent-color: var(--primary);
-        }
-
-        /* Espacement vertical des boutons */
-        .button-group {
-            display: flex;
-            flex-direction: column;
-            gap: 0.75rem;
-        }
-
-        /* Bouton d'installation personnalisé (Android) */
-        #installButton {
-            position: fixed;
-            bottom: 140px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 1000;
-            padding: 12px 24px;
-            background-color: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 2rem;
-            font-weight: bold;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-            display: none;
-            animation: pulse 2s infinite;
-        }
-        @keyframes pulse {
-            0% { box-shadow: 0 4px 12px rgba(255,140,0,0.4); }
-            50% { box-shadow: 0 4px 20px rgba(255,140,0,0.8); }
-            100% { box-shadow: 0 4px 12px rgba(255,140,0,0.4); }
-        }
-
-        /* Guide d'installation iOS */
-        #iosInstallGuide {
-            position: fixed;
-            bottom: 140px;
-            left: 10px;
-            right: 10px;
-            background: var(--primary);
-            color: white;
-            padding: 16px;
-            border-radius: 16px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-            z-index: 1000;
-            display: none;
-            text-align: center;
-            animation: slideUp 0.3s;
-        }
-        @keyframes slideUp {
-            from { transform: translateY(100%); }
-            to { transform: translateY(0); }
-        }
-        #iosInstallGuide p {
-            margin-bottom: 10px;
-            font-weight: bold;
-        }
-        #iosInstallGuide ol {
-            text-align: left;
-            margin: 10px 0 15px 20px;
-        }
-        #iosInstallGuide button {
-            background: white;
-            color: var(--primary);
-            border: none;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        /* Media queries pour très petits écrans */
-        @media (max-width: 400px) {
-            .app-bar {
-                padding: 0.5rem;
-            }
-            .app-title {
-                font-size: 1.1rem;
-            }
-            .rate-info {
-                font-size: 0.6rem;
-                min-width: 50px;
-            }
-            .date-selector input[type="date"] {
-                max-width: 120px;
-            }
-            .nav-item .material-icons {
-                font-size: 1.1rem;
-            }
-            .nav-item span {
-                font-size: 0.6rem;
-            }
-            .screen-title {
-                font-size: 1.1rem;
-            }
+        .session-item { display:flex; justify-content:space-between; align-items:center; background:var(--bg-light); border-radius:0.5rem; padding:0.5rem; cursor:pointer; transition:background 0.2s; }
+        .session-item:hover { background:var(--bg-dark); }
+        .session-date { font-weight:600; }
+        .session-count { color:var(--text-secondary); font-size:0.8rem; }
+        #installButton { position:fixed; bottom:140px; left:50%; transform:translateX(-50%); z-index:1000; padding:12px 24px; background:var(--primary); color:white; border:none; border-radius:2rem; font-weight:bold; box-shadow:0 4px 12px rgba(0,0,0,0.5); display:none; animation:pulse 2s infinite; }
+        @keyframes pulse { 0%{box-shadow:0 4px 12px rgba(255,140,0,0.4);} 50%{box-shadow:0 4px 20px rgba(255,140,0,0.8);} 100%{box-shadow:0 4px 12px rgba(255,140,0,0.4);} }
+        #iosInstallGuide { position:fixed; bottom:140px; left:10px; right:10px; background:var(--primary); color:white; padding:16px; border-radius:16px; box-shadow:0 4px 12px rgba(0,0,0,0.5); z-index:1000; display:none; text-align:center; animation:slideUp 0.3s; }
+        @keyframes slideUp { from{transform:translateY(100%);} to{transform:translateY(0);} }
+        #iosInstallGuide p { margin-bottom:10px; font-weight:bold; }
+        #iosInstallGuide ol { text-align:left; margin:10px 0 15px 20px; }
+        #iosInstallGuide button { background:white; color:var(--primary); border:none; padding:8px 16px; border-radius:20px; font-weight:bold; cursor:pointer; }
+        @media (max-width:400px) {
+            .app-bar { padding:0.5rem; }
+            .app-title { font-size:1.1rem; }
+            .rate-info { font-size:0.6rem; min-width:50px; }
+            .date-selector input[type="date"] { max-width:120px; }
+            .nav-item .material-icons { font-size:1.1rem; }
+            .nav-item span { font-size:0.6rem; }
+            .screen-title { font-size:1.1rem; }
         }
     </style>
 </head>
 <body>
-    <!-- Barre supérieure avec titre et taux -->
     <div class="app-bar">
         <span class="app-title">FastDeal</span>
         <span class="rate-info" id="rateInfo">USD/CFA: ...</span>
     </div>
 
-    <!-- Barre de sélecteur de date (juste en dessous) -->
     <div class="date-bar">
         <div class="date-selector">
             <input type="date" id="datePicker">
@@ -455,9 +129,7 @@
         </div>
     </div>
 
-    <!-- Conteneur des écrans -->
     <div class="screen-container" id="screenContainer">
-        <!-- Écran SAISIE -->
         <div id="screenSaisie" class="screen active">
             <h2 class="screen-title"><span class="material-icons">attach_money</span> Vente</h2>
             <div class="card">
@@ -483,7 +155,6 @@
             <div id="messageArea" class="message"></div>
         </div>
 
-        <!-- Écran HISTORIQUE -->
         <div id="screenHistorique" class="screen">
             <h2 class="screen-title"><span class="material-icons">history</span> Historique</h2>
             <div class="flex-row">
@@ -493,7 +164,6 @@
             <div class="scrollable" id="histList"></div>
         </div>
 
-        <!-- Écran CALCULS -->
         <div id="screenCalculs" class="screen">
             <h2 class="screen-title"><span class="material-icons">calculate</span> Résumé session</h2>
             <div class="card">
@@ -508,7 +178,7 @@
             </div>
             <div class="card">
                 <div class="flex-row" style="gap: 0.75rem;">
-                    <button id="btnSaveSession" class="secondary full-width"><span class="material-icons">save</span> Sauvegarder</button>
+                    <button id="btnSaveSession" class="secondary full-width"><span class="material-icons">save</span> Sauvegarder cette session</button>
                     <button id="btnRecalc" class="secondary full-width"><span class="material-icons">refresh</span> Recalculer</button>
                 </div>
                 <div class="flex-row" style="justify-content: flex-start; margin-top: 0.75rem;">
@@ -523,7 +193,6 @@
             </div>
         </div>
 
-        <!-- Écran STOCKS -->
         <div id="screenStocks" class="screen">
             <h2 class="screen-title"><span class="material-icons">inventory</span> Gestion des stocks</h2>
             <div class="flex-row">
@@ -546,7 +215,6 @@
             <div class="scrollable" id="stockList"></div>
         </div>
 
-        <!-- Écran RÉSUMÉ PÉRIODE -->
         <div id="screenResume" class="screen">
             <h2 class="screen-title"><span class="material-icons">assessment</span> Résumé par période</h2>
             <div class="card">
@@ -560,6 +228,7 @@
                         <option value="prevMonth">Mois précédent</option>
                         <option value="year">Année en cours</option>
                         <option value="prevYear">Année précédente</option>
+                        <option value="all">Toutes les ventes</option>
                         <option value="custom">Personnalisé</option>
                     </select>
                     <button id="btnRefreshResume" class="secondary"><span class="material-icons">refresh</span></button>
@@ -581,14 +250,12 @@
             </div>
         </div>
 
-        <!-- Écran JOURNAL -->
         <div id="screenArchives" class="screen">
             <h2 class="screen-title"><span class="material-icons">article</span> Journal des actions</h2>
             <input type="text" id="logFilter" placeholder="Filtrer les actions...">
             <div class="scrollable" id="logsList"></div>
         </div>
 
-        <!-- Écran PROFIL -->
         <div id="screenProfile" class="screen">
             <h2 class="screen-title"><span class="material-icons">settings</span> Paramètres</h2>
             <div class="card">
@@ -612,18 +279,24 @@
                     <input type="checkbox" id="settingNotifications" checked>
                     <label>Activer les notifications</label>
                 </div>
-                <button id="btnSaveSettings" class="secondary full-width mt-2"><span class="material-icons">save</span> Sauvegarder</button>
+                <button id="btnSaveSettings" class="secondary full-width mt-2"><span class="material-icons">save</span> Sauvegarder les réglages</button>
                 <button id="btnFetchRate" class="secondary full-width mt-2"><span class="material-icons">sync</span> Mettre à jour le taux</button>
-                <button id="btnExportJSON" class="secondary full-width mt-2"><span class="material-icons">download</span> Exporter JSON (tout)</button>
+                <button id="btnExportJSON" class="secondary full-width mt-2"><span class="material-icons">download</span> Exporter toutes les données (JSON)</button>
                 <input type="file" id="importJSON" accept=".json" style="display:none;">
                 <button id="btnImportJSON" class="secondary full-width mt-2"><span class="material-icons">upload</span> Importer JSON (restauration)</button>
                 <button id="btnWipeAll" class="danger full-width mt-2"><span class="material-icons">warning</span> Effacer TOUTES les données</button>
+                
+                <div class="card" style="margin-top: 1rem;">
+                    <h3>Sessions sauvegardées</h3>
+                    <div id="sessionsCount" class="text-info bold">Chargement...</div>
+                    <div id="sessionsList" class="sessions-list"></div>
+                </div>
+
                 <div class="small text-muted" style="margin-top:1rem;">Version 7.8.1</div>
             </div>
         </div>
     </div>
 
-    <!-- Barre de navigation basse -->
     <div class="bottom-nav">
         <div class="nav-item active" data-screen="saisie"><span class="material-icons">attach_money</span><span>Vente</span></div>
         <div class="nav-item" data-screen="historique"><span class="material-icons">history</span><span>Histo</span></div>
@@ -634,10 +307,8 @@
         <div class="nav-item" data-screen="profile"><span class="material-icons">settings</span><span>Param</span></div>
     </div>
 
-    <!-- Bouton d'installation personnalisé (Android) -->
     <button id="installButton"><span class="material-icons">install_mobile</span> Installer l'application</button>
 
-    <!-- Guide d'installation iOS -->
     <div id="iosInstallGuide">
         <p>📱 Installer FastDeal sur iPhone</p>
         <ol>
@@ -649,9 +320,7 @@
     </div>
 
     <script>
-        // ==================== Application principale ====================
         (function() {
-            // --- État global ---
             const AppState = {
                 entries: [],
                 stockOperations: [],
@@ -680,7 +349,6 @@
                 filterTimeout: null,
             };
 
-            // Détection de la connexion
             window.addEventListener('online', () => {
                 AppState.online = true;
                 showMessage('📶 Connexion rétablie', 'success');
@@ -690,7 +358,6 @@
                 showMessage('📴 Mode hors ligne', 'offline');
             });
 
-            // --- Références DOM ---
             const DOM = {
                 rateInfo: document.getElementById('rateInfo'),
                 messageArea: document.getElementById('messageArea'),
@@ -769,9 +436,10 @@
                 installButton: document.getElementById('installButton'),
                 iosInstallGuide: document.getElementById('iosInstallGuide'),
                 closeIosGuide: document.getElementById('closeIosGuide'),
+                sessionsCount: document.getElementById('sessionsCount'),
+                sessionsList: document.getElementById('sessionsList'),
             };
 
-            // --- Initialisation de la base IndexedDB ---
             const DB_NAME = 'FastDealDB';
             const DB_VERSION = 3;
             let db = null;
@@ -803,7 +471,6 @@
                 });
             }
 
-            // --- Fonctions de stockage ---
             async function saveCurrentSession() {
                 if (AppState.isReadOnly) return;
                 const session = {
@@ -812,9 +479,16 @@
                     stockOperations: AppState.stockOperations,
                     actionLogs: AppState.actionLogs,
                 };
-                const tx = db.transaction('dailySessions', 'readwrite');
-                tx.objectStore('dailySessions').put(session);
-                return tx.complete;
+                try {
+                    const tx = db.transaction('dailySessions', 'readwrite');
+                    const store = tx.objectStore('dailySessions');
+                    store.put(session);
+                    await tx.complete;
+                    console.log('✅ Session sauvegardée :', AppState.currentSessionDate);
+                } catch (e) {
+                    console.error('❌ Erreur sauvegarde session :', e);
+                    showMessage('Erreur sauvegarde session', 'error');
+                }
             }
 
             async function loadSession(date) {
@@ -883,7 +557,6 @@
                 DOM.autoSaveCheck.checked = AppState.autoSaveEnabled;
             }
 
-            // --- Fonction pour demander la permission de notification ---
             async function requestNotificationPermission() {
                 if (!AppState.notificationsEnabled) return;
                 if (Notification.permission === 'default') {
@@ -891,7 +564,6 @@
                 }
             }
 
-            // --- Fonction pour envoyer une notification (si activée) ---
             function sendNotification(title, body) {
                 if (!AppState.notificationsEnabled) return;
                 if (Notification.permission === 'granted') {
@@ -899,34 +571,79 @@
                 }
             }
 
-            // --- Fonction de sauvegarde automatique quotidienne (23h30) ---
-            async function performDailyBackup() {
-                if (!AppState.dailyBackupEnabled) return;
-
+            // ----- FONCTIONS CORRIGÉES : exportJSON, performDailyBackup, updateSessionsList -----
+            async function exportJSON() {
                 try {
                     const sessionsTx = db.transaction('dailySessions', 'readonly');
                     const sessionsStore = sessionsTx.objectStore('dailySessions');
-                    let sessions = await sessionsStore.getAll();
-                    if (!Array.isArray(sessions)) sessions = [];
+                    let sessions = await new Promise((resolve, reject) => {
+                        const request = sessionsStore.getAll();
+                        request.onsuccess = () => resolve(request.result || []);
+                        request.onerror = () => reject(request.error);
+                    });
 
                     const lotsTx = db.transaction('stockLots', 'readonly');
                     const lotsStore = lotsTx.objectStore('stockLots');
-                    let lots = await lotsStore.getAll();
-                    if (!Array.isArray(lots)) lots = [];
+                    let lots = await new Promise((resolve, reject) => {
+                        const request = lotsStore.getAll();
+                        request.onsuccess = () => resolve(request.result || []);
+                        request.onerror = () => reject(request.error);
+                    });
 
-                    const todaySessionIndex = sessions.findIndex(s => s.date === AppState.currentSessionDate);
-                    const currentSessionData = {
-                        date: AppState.currentSessionDate,
-                        entries: AppState.entries,
-                        stockOperations: AppState.stockOperations,
-                        actionLogs: AppState.actionLogs
+                    // Fusion des lots (ceux de la base et ceux en mémoire)
+                    const lotMap = new Map();
+                    for (let lot of lots) lotMap.set(lot.lot_id, lot);
+                    for (let lot of AppState.stocks) lotMap.set(lot.lot_id, lot);
+                    const mergedLots = Array.from(lotMap.values());
+
+                    const config = localStorage.getItem('fastdeal_config') || '{}';
+
+                    const exportData = {
+                        version: '7.8.1',
+                        exportDate: new Date().toISOString(),
+                        dailySessions: sessions,
+                        stockLots: mergedLots,
+                        config: JSON.parse(config)
                     };
-                    if (todaySessionIndex >= 0) {
-                        sessions[todaySessionIndex] = currentSessionData;
-                    } else {
-                        sessions.push(currentSessionData);
-                    }
 
+                    const json = JSON.stringify(exportData, null, 2);
+                    const blob = new Blob([json], { type: 'application/json' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `fastdeal_backup_${new Date().toISOString().slice(0, 10)}.json`;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                    
+                    showMessage('✅ Export JSON réussi', 'success');
+                } catch (e) {
+                    console.error('Erreur export JSON:', e);
+                    showMessage('❌ Erreur export JSON', 'error');
+                }
+            }
+
+            async function performDailyBackup() {
+                if (!AppState.dailyBackupEnabled) return;
+                try {
+                    const sessionsTx = db.transaction('dailySessions', 'readonly');
+                    const sessionsStore = sessionsTx.objectStore('dailySessions');
+                    let sessions = await new Promise((resolve, reject) => {
+                        const request = sessionsStore.getAll();
+                        request.onsuccess = () => resolve(request.result || []);
+                        request.onerror = () => reject(request.error);
+                    });
+
+                    const lotsTx = db.transaction('stockLots', 'readonly');
+                    const lotsStore = lotsTx.objectStore('stockLots');
+                    let lots = await new Promise((resolve, reject) => {
+                        const request = lotsStore.getAll();
+                        request.onsuccess = () => resolve(request.result || []);
+                        request.onerror = () => reject(request.error);
+                    });
+
+                    // Fusion des lots (ceux de la base et ceux en mémoire)
                     const lotMap = new Map();
                     for (let lot of lots) lotMap.set(lot.lot_id, lot);
                     for (let lot of AppState.stocks) lotMap.set(lot.lot_id, lot);
@@ -973,26 +690,65 @@
                 }
             }
 
-            // --- Planification de la sauvegarde quotidienne à 23h30 ---
+            async function updateSessionsList() {
+                if (!db) return;
+                const tx = db.transaction('dailySessions', 'readonly');
+                const store = tx.objectStore('dailySessions');
+                const allSessions = await new Promise((resolve, reject) => {
+                    const request = store.getAll();
+                    request.onsuccess = () => resolve(request.result || []);
+                    request.onerror = () => reject(request.error);
+                });
+                const count = allSessions.length;
+                DOM.sessionsCount.innerText = count + ' session(s) sauvegardée(s)';
+                
+                const listContainer = DOM.sessionsList;
+                listContainer.innerHTML = '';
+                if (count === 0) {
+                    listContainer.appendChild(createMessage('Aucune session sauvegardée', 'text-secondary'));
+                    return;
+                }
+                allSessions.sort((a,b) => b.date.localeCompare(a.date));
+                allSessions.forEach(session => {
+                    const item = document.createElement('div');
+                    item.className = 'session-item';
+                    item.onclick = () => {
+                        switchSession(session.date).then(() => {
+                            const histItem = document.querySelector('.nav-item[data-screen="historique"]');
+                            if (histItem) histItem.click();
+                        });
+                    };
+                    const dateSpan = document.createElement('span');
+                    dateSpan.className = 'session-date';
+                    dateSpan.innerText = session.date.split('-').reverse().join('/');
+                    const countSpan = document.createElement('span');
+                    countSpan.className = 'session-count';
+                    const ventes = session.entries ? session.entries.length : 0;
+                    const achats = session.stockOperations ? session.stockOperations.length : 0;
+                    countSpan.innerText = `${ventes} vente(s), ${achats} achat(s)`;
+                    item.appendChild(dateSpan);
+                    item.appendChild(countSpan);
+                    listContainer.appendChild(item);
+                });
+            }
+
+            // ----- FIN DES CORRECTIONS -----
+
             function scheduleDailyBackup() {
                 if (AppState.backupTimerId) {
                     clearInterval(AppState.backupTimerId);
                 }
-
                 if (!AppState.dailyBackupEnabled) return;
-
                 AppState.backupTimerId = setInterval(() => {
                     const now = new Date();
                     const hours = now.getHours();
                     const minutes = now.getMinutes();
-
                     if (hours === 23 && minutes === 30) {
                         performDailyBackup();
                     }
                 }, 60000);
             }
 
-            // --- Effacer toutes les données ---
             async function wipeAllData() {
                 if (!confirm('⚠️ Êtes-vous sûr de vouloir effacer TOUTES les données ?\nCette action est irréversible.')) return;
                 try {
@@ -1025,66 +781,6 @@
                 }
             }
 
-            // --- Export JSON (toutes les données) ---
-            async function exportJSON() {
-                try {
-                    const sessionsTx = db.transaction('dailySessions', 'readonly');
-                    const sessionsStore = sessionsTx.objectStore('dailySessions');
-                    let sessions = await sessionsStore.getAll();
-                    if (!Array.isArray(sessions)) sessions = [];
-
-                    const lotsTx = db.transaction('stockLots', 'readonly');
-                    const lotsStore = lotsTx.objectStore('stockLots');
-                    let lots = await lotsStore.getAll();
-                    if (!Array.isArray(lots)) lots = [];
-
-                    const todaySessionIndex = sessions.findIndex(s => s.date === AppState.currentSessionDate);
-                    const currentSessionData = {
-                        date: AppState.currentSessionDate,
-                        entries: AppState.entries,
-                        stockOperations: AppState.stockOperations,
-                        actionLogs: AppState.actionLogs
-                    };
-                    if (todaySessionIndex >= 0) {
-                        sessions[todaySessionIndex] = currentSessionData;
-                    } else {
-                        sessions.push(currentSessionData);
-                    }
-
-                    const lotMap = new Map();
-                    for (let lot of lots) lotMap.set(lot.lot_id, lot);
-                    for (let lot of AppState.stocks) lotMap.set(lot.lot_id, lot);
-                    const mergedLots = Array.from(lotMap.values());
-
-                    const config = localStorage.getItem('fastdeal_config') || '{}';
-
-                    const exportData = {
-                        version: '7.8.1',
-                        exportDate: new Date().toISOString(),
-                        dailySessions: sessions,
-                        stockLots: mergedLots,
-                        config: JSON.parse(config)
-                    };
-
-                    const json = JSON.stringify(exportData, null, 2);
-                    const blob = new Blob([json], { type: 'application/json' });
-                    const url = URL.createObjectURL(blob);
-                    const a = document.createElement('a');
-                    a.href = url;
-                    a.download = `fastdeal_backup_${new Date().toISOString().slice(0, 10)}.json`;
-                    document.body.appendChild(a);
-                    a.click();
-                    document.body.removeChild(a);
-                    URL.revokeObjectURL(url);
-                    
-                    showMessage('✅ Export JSON réussi', 'success');
-                } catch (e) {
-                    console.error('Erreur export JSON:', e);
-                    showMessage('❌ Erreur export JSON', 'error');
-                }
-            }
-
-            // --- Import JSON (restauration complète) ---
             async function importJSON(file) {
                 const reader = new FileReader();
                 reader.onload = async (e) => {
@@ -1137,7 +833,6 @@
                 reader.readAsText(file);
             }
 
-            // --- Gestion du taux de change avec cache ---
             function loadCachedRate() {
                 const cached = localStorage.getItem('fastdeal_rate');
                 if (cached) {
@@ -1198,7 +893,6 @@
                 }
             }
 
-            // --- Notification et son pour stock bas ---
             async function notifyLowStock(currentQty) {
                 if (!AppState.notificationsEnabled) return;
                 if (Notification.permission !== 'granted' && Notification.permission !== 'denied') {
@@ -1219,7 +913,6 @@
                 }
             }
 
-            // --- Fonctions métier ---
             function ajouterVente(qty, prixVente) {
                 if (AppState.isReadOnly) { showMessage('Lecture seule', 'error'); return false; }
                 if (qty <= 0 || prixVente <= 0) { showMessage('Quantité et prix positifs', 'warning'); return false; }
@@ -1337,7 +1030,6 @@
 
             function editerVente(vente, newQty, newPrix) {
                 if (AppState.isReadOnly) { showMessage('Lecture seule', 'error'); return; }
-                // Vérifier que tous les lots existent encore
                 for (let p of vente.preleves) {
                     const lot = AppState.stocks.find(l => l.lot_id === p.lot_id);
                     if (!lot) {
@@ -1345,12 +1037,10 @@
                         return;
                     }
                 }
-                // Annuler l'ancienne vente
                 for (let p of vente.preleves) {
                     const lot = AppState.stocks.find(l => l.lot_id === p.lot_id);
                     if (lot) lot.remaining += p.qty;
                 }
-                // Appliquer la nouvelle vente
                 const lotsTries = [...AppState.stocks].sort((a,b) => new Date(a.date) - new Date(b.date));
                 let reste = newQty;
                 let newBenef = 0;
@@ -1365,7 +1055,6 @@
                     if (reste <= 0) break;
                 }
                 if (reste > 0) {
-                    // Échec : restaurer l'ancien état
                     for (let p of vente.preleves) {
                         const lot = AppState.stocks.find(l => l.lot_id === p.lot_id);
                         if (lot) lot.remaining -= p.qty;
@@ -1373,7 +1062,6 @@
                     showMessage('Stock insuffisant pour la modification', 'error');
                     return;
                 }
-                // Mise à jour
                 vente.dollars = newQty;
                 vente.prix = newPrix;
                 vente.benef = newBenef;
@@ -1405,7 +1093,6 @@
                 showMessage('Toutes les ventes ont été effacées', 'success');
             }
 
-            // --- Calculs et affichage ---
             function updateCalculs() {
                 const totalD = AppState.entries.reduce((s, e) => s + e.dollars, 0);
                 const totalC = AppState.entries.reduce((s, e) => s + e.dollars * e.prix, 0);
@@ -1709,6 +1396,43 @@
                 } else if (period === 'prevYear') {
                     startDate = new Date(today.getFullYear() - 1, 0, 1);
                     endDate = new Date(today.getFullYear() - 1, 11, 31);
+                } else if (period === 'all') {
+                    // --- CORRECTION : toutes les ventes ---
+                    const tx = db.transaction('dailySessions', 'readonly');
+                    const store = tx.objectStore('dailySessions');
+                    const allSessions = await new Promise((resolve, reject) => {
+                        const request = store.getAll();
+                        request.onsuccess = () => resolve(request.result || []);
+                        request.onerror = () => reject(request.error);
+                    });
+                    await tx.complete;
+
+                    let totalD = 0, totalC = 0, totalB = 0;
+                    for (let session of allSessions) {
+                        (session.entries || []).forEach(e => {
+                            totalD += e.dollars;
+                            totalC += e.dollars * e.prix;
+                            totalB += e.benef;
+                        });
+                    }
+                    // Ajouter la session courante (même si pas encore sauvegardée)
+                    AppState.entries.forEach(e => {
+                        totalD += e.dollars;
+                        totalC += e.dollars * e.prix;
+                        totalB += e.benef;
+                    });
+
+                    DOM.periodTitle.innerText = 'Période : Toutes les ventes';
+                    DOM.resTotalDollars.innerText = totalD.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ' ') + ' $';
+                    DOM.resTotalCfa.innerText = totalC.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ' ') + ' CFA';
+                    DOM.resTotalBenef.innerText = totalB.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ' ') + ' CFA';
+                    const avgP = totalD ? totalC / totalD : 0;
+                    const avgB = totalD ? totalB / totalD : 0;
+                    const margin = totalC ? (totalB / totalC * 100) : 0;
+                    DOM.resAvgPrice.innerText = avgP.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ' ') + ' CFA/$';
+                    DOM.resAvgBenef.innerText = avgB.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ' ') + ' CFA/$';
+                    DOM.resMargin.innerText = margin.toFixed(2) + ' %';
+                    return;
                 } else if (period === 'custom') {
                     startDate = new Date(DOM.customStart.value + 'T00:00');
                     endDate = new Date(DOM.customEnd.value + 'T00:00');
@@ -1730,7 +1454,7 @@
                     
                     const sessions = await new Promise((resolve, reject) => {
                         const request = index.getAll(range);
-                        request.onsuccess = () => resolve(request.result);
+                        request.onsuccess = () => resolve(request.result || []);
                         request.onerror = () => reject(request.error);
                     });
 
@@ -1739,15 +1463,14 @@
                     let totalD = 0, totalC = 0, totalB = 0;
 
                     for (let session of sessions) {
-                        if (session.date !== AppState.currentSessionDate) {
-                            (session.entries || []).forEach(e => {
-                                totalD += e.dollars;
-                                totalC += e.dollars * e.prix;
-                                totalB += e.benef;
-                            });
-                        }
+                        (session.entries || []).forEach(e => {
+                            totalD += e.dollars;
+                            totalC += e.dollars * e.prix;
+                            totalB += e.benef;
+                        });
                     }
 
+                    // Ajouter la session courante si elle est dans la période
                     if (AppState.currentSessionDate >= startStr && AppState.currentSessionDate <= endStr) {
                         AppState.entries.forEach(e => {
                             totalD += e.dollars;
@@ -1771,7 +1494,8 @@
                 }
             }
 
-            // Changer de session (permet de naviguer entre les dates)
+            // --- autres fonctions inchangées ---
+
             async function switchSession(newDate) {
                 if (newDate === AppState.currentSessionDate) return;
 
@@ -1798,6 +1522,35 @@
                 
                 renderAll();
                 showMessage(`✅ Session du ${newDate} chargée (modifiable)`, 'success');
+            }
+
+            async function checkDateChange() {
+                const now = new Date();
+                const newDate = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+
+                if (newDate === AppState.currentSessionDate) return;
+
+                console.log(`📅 Changement de jour détecté : ${AppState.currentSessionDate} → ${newDate}`);
+
+                await saveCurrentSession();
+                await saveStockLots();
+
+                AppState.currentSessionDate = newDate;
+                const session = await loadSession(newDate);
+                if (session) {
+                    AppState.entries = session.entries || [];
+                    AppState.stockOperations = session.stockOperations || [];
+                    AppState.actionLogs = session.actionLogs || [];
+                } else {
+                    AppState.entries = [];
+                    AppState.stockOperations = [];
+                    AppState.actionLogs = [];
+                }
+
+                DOM.datePicker.value = newDate;
+                ajouterLog('changement_jour_auto', `📅 Passage automatique au nouveau jour : ${newDate}`);
+                renderAll();
+                showMessage(`📅 Nouveau jour chargé : ${newDate.split('-').reverse().join('/')}`, 'success');
             }
 
             function ajouterLog(type, description) {
@@ -1834,7 +1587,6 @@
                 renderHistorique(DOM.histFilter.value);
                 renderStocks(DOM.showAllLots.checked);
                 renderLogs(DOM.logFilter.value);
-
                 updateRateDisplay();
 
                 DOM.btnVendre.disabled = AppState.isReadOnly;
@@ -1844,6 +1596,10 @@
 
                 if (AppState.currentScreen === 'resume') {
                     renderResume();
+                }
+
+                if (AppState.currentScreen === 'profile') {
+                    updateSessionsList();
                 }
             }
 
@@ -1888,7 +1644,6 @@
                 showMessage('Achat modifié', 'success');
             }
 
-            // --- Gestion du swipe pour navigation ---
             let touchStartX = 0;
             let touchEndX = 0;
             const screenContainer = document.querySelector('.screen-container');
@@ -1925,7 +1680,6 @@
                 }
             }
 
-            // --- Gestion du prompt d'installation (Android) ---
             let deferredPrompt;
             window.addEventListener('beforeinstallprompt', (e) => {
                 e.preventDefault();
@@ -1948,7 +1702,6 @@
                 console.log('Application installée');
             });
 
-            // --- Gestion du guide iOS ---
             function isIOS() {
                 return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
             }
@@ -1961,7 +1714,6 @@
                 DOM.iosInstallGuide.style.display = 'none';
             });
 
-            // --- Débounce pour le filtre de l'historique (performance) ---
             function debouncedRenderHistorique(filter) {
                 if (AppState.filterTimeout) clearTimeout(AppState.filterTimeout);
                 AppState.filterTimeout = setTimeout(() => {
@@ -1969,7 +1721,6 @@
                 }, 300);
             }
 
-            // --- Initialisation ---
             async function init() {
                 await openDB();
                 loadConfig();
@@ -2000,7 +1751,6 @@
 
                 scheduleDailyBackup();
 
-                // Événements
                 DOM.venteQty.addEventListener('blur', function() { if (this.value < 0) this.value = 0; });
                 DOM.ventePrix.addEventListener('blur', function() { if (this.value < 0) this.value = 0; });
                 DOM.venteQty.addEventListener('input', updatePreview);
@@ -2085,7 +1835,6 @@
 
                 DOM.showAllLots.addEventListener('change', (e) => renderStocks(e.target.checked));
 
-                // Navigation
                 DOM.navItems.forEach(item => {
                     item.addEventListener('click', () => {
                         const screen = item.dataset.screen;
@@ -2102,10 +1851,12 @@
                         if (screen === 'resume') {
                             renderResume();
                         }
+                        if (screen === 'profile') {
+                            updateSessionsList();
+                        }
                     });
                 });
 
-                // Sélecteur de date
                 DOM.datePicker.addEventListener('change', () => {
                     switchSession(DOM.datePicker.value);
                 });
@@ -2134,13 +1885,15 @@
                     renderAll();
                 });
                 DOM.btnFetchRate.addEventListener('click', () => fetchExchangeRate(true));
+
+                setInterval(checkDateChange, 60000);
+                checkDateChange();
             }
 
             init();
         })();
     </script>
 
-    <!-- Enregistrement du Service Worker avec chemin relatif corrigé -->
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
